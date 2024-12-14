@@ -19,6 +19,8 @@
     <meta property="og:image" content="" />
     <meta name="format-detection" content="telephone=no">
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <!-- FAVICONS ICON ============================================= -->
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.png" />
@@ -52,9 +54,36 @@
     <link rel="stylesheet" type="text/css" href="assets/vendors/revolution/css/settings.css">
     <link rel="stylesheet" type="text/css" href="assets/vendors/revolution/css/navigation.css">
     <!-- REVOLUTION SLIDER END -->
+
+    <style>
+        /* Style the dropdown box */
+        .goog-te-gadget-simple {
+            border-radius: 6px;
+            /* Slightly rounded corners */
+            color: black;
+
+        }
+
+        /* Style the icon inside the box */
+        .goog-te-gadget-simple img {
+            display: none;
+            /* Hide the Google Translate icon */
+        }
+
+        /* Hover effect */
+        .goog-te-gadget-simple:hover {
+            background-color: #d4e7ff;
+            /* Darker blue on hover */
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+            /* Slightly darker shadow */
+        }
+    </style>
+
+
 </head>
 
 <body id="bg">
+
     <div class="page-wraper">
         <div id="loading-icon-bx"></div>
 
@@ -65,6 +94,10 @@
         <x-footer />
 
     </div>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+    </script>
 
     <!-- External JavaScripts -->
     <script src="assets/js/jquery.min.js"></script>
@@ -95,6 +128,7 @@
     <script src="assets/vendors/revolution/js/extensions/revolution.extension.parallax.min.js"></script>
     <script src="assets/vendors/revolution/js/extensions/revolution.extension.slideanims.min.js"></script>
     <script src="assets/vendors/revolution/js/extensions/revolution.extension.video.min.js"></script>
+
     <script>
         jQuery(document).ready(function() {
             var ttrevapi;

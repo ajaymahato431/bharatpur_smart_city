@@ -11,11 +11,24 @@
                 </div>
                 <div class="topbar-right">
                     <ul>
+                        <!-- Google Translate Dropdown -->
                         <li>
-                            <select class="header-lang-bx">
-                                <option data-icon="flag flag-uk">English UK</option>
-                                <option data-icon="flag flag-us">English US</option>
-                            </select>
+                            <div id="google_translate_element"></div>
+                        </li>
+                        <li>
+                            <!-- Google Translate Dropdown -->
+                            <div id="google_translate_element" style="border-radius: 25%"></div>
+
+                            <!-- Google Translate Initialization -->
+                            <script type="text/javascript">
+                                function googleTranslateElementInit() {
+                                    new google.translate.TranslateElement({
+                                        pageLanguage: 'en',
+                                        includedLanguages: 'en,ne',
+                                        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                                    }, 'google_translate_element');
+                                }
+                            </script>
                         </li>
                         <li><a href="login.html">Login</a></li>
                         <li><a href="register.html">Register</a></li>
