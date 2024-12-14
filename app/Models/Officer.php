@@ -12,6 +12,8 @@ class Officer extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $guard = 'officers';
+
     /**
      * The attributes that are mass assignable.
      *
