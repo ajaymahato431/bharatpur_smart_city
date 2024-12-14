@@ -119,6 +119,16 @@ textarea.form-control {
     margin-right: 15px;
 }
 /*input group*/
+
+.input-group-custom{
+    width: 100%;
+}
+
+.input-group-custom input{
+    border-radius: 5px;
+    background-color: whitesmoke;
+}
+
 .input-group {
     width: 100%;
 }
@@ -185,7 +195,7 @@ textarea.form-control {
 }
 .bootstrap-select.show.btn-group .dropdown-menu.inner{
 	display:block;
-}	
+}
 .bootstrap-select div.dropdown-menu {
     border: 1px solid #e9e9e9;
     border-radius: 0;

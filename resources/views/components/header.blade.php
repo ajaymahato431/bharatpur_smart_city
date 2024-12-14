@@ -6,7 +6,7 @@
                 <div class="topbar-left">
                     <ul>
                         <li><a href="faq-1.html"><i class="fa fa-question-circle"></i>Ask a Question</a></li>
-                        <li><a href="javascript:;"><i class="fa fa-envelope-o"></i>Support@website.com</a></li>
+                        <li><a href="javascript:;"><i class="fa fa-envelope-o"></i>Support@bharatpur.com</a></li>
                     </ul>
                 </div>
                 <div class="topbar-right">
@@ -30,8 +30,8 @@
                                 }
                             </script>
                         </li>
-                        <li><a href="login.html">Login</a></li>
-                        <li><a href="register.html">Register</a></li>
+                        <li><a href="{{ route('login') }}">Login</a></li>
+                        <li><a href="{{ route('register') }}">Register</a></li>
                     </ul>
                 </div>
             </div>
