@@ -19,16 +19,16 @@ class EmailNotification extends Mailable
      */
 
     public $data;
-    public $resetUrl;
+    // public $resetUrl;
     public function __construct($data)
     {
         $this->data = $data;
 
-        $this->resetUrl = URL::temporarySignedRoute(
-            'password.reset',
-            now()->addMinutes(config('auth.passwords.users.expire', 60)),
-            ['token' => $data['token']]
-        );
+        // $this->resetUrl = URL::temporarySignedRoute(
+        //     'password.reset',
+        //     now()->addMinutes(config('auth.passwords.users.expire', 60)),
+        //     ['token' => $data['token']]
+        // );
     }
 
     /**
@@ -37,7 +37,7 @@ class EmailNotification extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Email Notification',
+            subject: $this->data['subject'],
         );
     }
 
@@ -47,7 +47,7 @@ class EmailNotification extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'mail.email-notification',
         );
     }
 

@@ -15,7 +15,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'citizenship_no' => 'required|string|max:50',
+            'citizenship_no' => 'required|string|max:50|unique:user_details,citizenship_no',
             'citizenship_front_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'citizenship_back_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'address' => 'required|string|max:255',
@@ -27,11 +27,13 @@ class UserController extends Controller
         $frontImagePath = $request->file('citizenship_front_image')->store('citizenship_images', 'public');
         $backImagePath = $request->file('citizenship_back_image')->store('citizenship_images', 'public');
 
+        $password = rand(11111, 99999);
+
         // Create user record in `users` table
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make('Nagarik1234'), // Default password
+            'password' => Hash::make($password),
         ]);
 
         // Create user details record in `user_details` table

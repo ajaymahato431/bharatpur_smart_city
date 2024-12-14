@@ -31,10 +31,17 @@ class UserResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\DateTimePicker::make('email_verified_at'),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required()
-                    ->maxLength(255),
+                // Forms\Components\TextInput::make('password')
+                //     ->password()
+                //     ->required()
+                //     ->maxLength(255),
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'approved' => 'Approved',
+                        'reject' => 'Reject',
+                        'pending' => 'Pending',
+                    ])
+                    ->required(),
             ]);
     }
 
@@ -57,6 +64,7 @@ class UserResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('status'),
             ])
             ->filters([
                 //
