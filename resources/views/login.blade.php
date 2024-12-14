@@ -64,6 +64,7 @@
                         <p>Don't have an account? <a href="{{ route('register') }}">Create one here</a></p>
                     </div>
                     <form class="contact-bx">
+                        @csrf
                         <div class="row placeani">
                             <div class="col-lg-12">
                                 <div class="form-group">

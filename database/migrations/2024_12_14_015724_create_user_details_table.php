@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedInteger('ward_no')->default(10);
             $table->string('address');
             $table->date('dob');
-            $table->string('gender');
+            $table->enum('gender', ['male', 'female', 'other']);
             $table->timestamps();
         });
     }
