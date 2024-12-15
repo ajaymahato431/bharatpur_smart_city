@@ -1,4 +1,4 @@
-<x-layout>
+<x-home-layout>
     <!-- Content -->
     <div class="bg-white page-content">
         <!-- Main Slider -->
@@ -595,4 +595,4 @@
     </div>
     <!-- Content END-->
 
-</x-layout>
+</x-home-layout>

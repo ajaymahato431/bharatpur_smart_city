@@ -26,8 +26,8 @@
                 <div class="col-lg-4 col-md-12 col-sm-12 footer-col-4">
                     <div class="widget">
                         <h5 class="footer-title">Sign Up For A Newsletter</h5>
-                        <p class="text-capitalize m-b20">Weekly Breaking news analysis and cutting edge advices on job
-                            searching.</p>
+                        <p class="text-capitalize m-b20">Weekly Breaking news analysis and cutting edge advices
+                            on job searching.</p>
                         <div class="subscribe-form m-b20">
                             <form class="subscription-form"
                                 action="http://educhamp.themetrades.com/demo/assets/script/mailchamp.php"
@@ -62,7 +62,8 @@
                             <div class="widget footer_widget">
                                 <h5 class="footer-title">Get In Touch</h5>
                                 <ul>
-                                    <li><a href="http://educhamp.themetrades.com/admin/index.html">Dashboard</a></li>
+                                    <li><a href="http://educhamp.themetrades.com/admin/index.html">Dashboard</a>
+                                    </li>
                                     <li><a href="blog-classic-grid.html">Blog</a></li>
                                     <li><a href="portfolio.html">Portfolio</a></li>
                                     <li><a href="event.html">Event</a></li>
@@ -111,7 +112,7 @@
     <div class="footer-bottom">
         <div class="container">
             <div class="row">
-                <div class="text-center col-lg-12 col-md-12 col-sm-12"> <a target="_blank"
+                <div class="text-center col-lg-12 col-md-12 col-sm-12"><a target="_blank"
                         href="https://www.templateshub.net">Templates Hub</a></div>
             </div>
         </div>
