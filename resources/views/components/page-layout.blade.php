@@ -24,7 +24,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/favicon.png') }}" />
 
     <!-- PAGE TITLE HERE ============================================= -->
-    <title>EduChamp : Education HTML Template </title>
+    <title>@yield('title', 'Smart Wada')</title>
 
     <!-- MOBILE SPECIFIC ============================================= -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -111,6 +111,40 @@
             color: #007bff;
             text-decoration: underline;
         }
+
+        .form-control::placeholder {
+            color: #6c757d !important;
+            /* Default placeholder color */
+            opacity: 1;
+            /* Ensures visibility */
+        }
+
+        .form-control:focus::placeholder,
+        .form-control:hover::placeholder {
+            color: #6c757d !important;
+            /* Placeholder remains visible */
+        }
+
+        /* Fix styling for select fields */
+        select.form-control {
+            color: #6c757d !important;
+            /* Placeholder color */
+        }
+
+        select.form-control:focus,
+        select.form-control:hover {
+            border-color: #80bdff;
+            /* Focus border color */
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            /* Focus glow effect */
+            outline: none;
+        }
+
+        /* Placeholder-like option styling */
+        select.form-control option[disabled] {
+            color: #6c757d !important;
+            /* Placeholder text color */
+        }
     </style>
 </head>
 
@@ -121,7 +155,23 @@
 
         <x-header />
 
-        {{ $slot }}
+        <div class="bg-white page-content">
+
+            <x-inner-banner />
+
+            <div class="content-block">
+                <div class="section-area section-sp1">
+                    <div class="container">
+
+
+                        {{ $slot }}
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
 
         <x-footer />
 
