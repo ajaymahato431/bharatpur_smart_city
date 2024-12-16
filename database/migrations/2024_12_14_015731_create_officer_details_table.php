@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('officer_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('officer_id')->constrained('officers')->onDelete('cascade');
+            $table->string('staff_no');
             $table->string('citizenship_no');
             $table->string('citizenship_front_image');
             $table->string('citizenship_back_image');

@@ -17,13 +17,8 @@ class ServiceRequest extends Model
         'related_request_type',
         'submission_date',
         'verification_date',
-        'completion_date'
+        'completion_date',
     ];
-
-    public function documents()
-    {
-        return $this->hasMany(Document::class, 'service_request_id');
-    }
 
     public function users()
     {

@@ -17,6 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger('related_request_id')->nullable(); // Polymorphic ID
             $table->string('related_request_type')->nullable(); // Polymorphic type
             $table->enum('status', ['pending', 'verified', 'approved', 'rejected'])->default('pending'); // Status
+            $table->date('submission_date')->default(now());
+            $table->date('verification_date')->nullable();
+            $table->date('completion_date')->nullable();
             $table->timestamps(); // Created at and updated at timestamps
 
             // Foreign Key Constraints

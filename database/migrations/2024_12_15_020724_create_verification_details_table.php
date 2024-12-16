@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('service_request_id')->constrained()->cascadeOnDelete(); // Foreign Key: Links to the service_requests table
             $table->foreignId('officer_id')->constrained(); // Foreign Key: Links to the officers table
             $table->string('form_no')->nullable(); // Form Number
-            $table->date('form_date')->nullable(); // Date of Form
+            $table->date('form_date')->default(now()); // Date of Form
             $table->string('family_cost_no')->nullable(); // Family Cost Number
             $table->string('municipality')->nullable(); // Municipality Name
             $table->integer('ward')->nullable(); // Ward Naumber

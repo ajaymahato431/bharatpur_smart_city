@@ -43,7 +43,7 @@ class ViewBirthCertificateForm extends ViewRecord
 
             Actions\Action::make('reject')
                 ->label('Reject')
-                ->visible(fn (Model $record) => $record->serviceRequests->last()?->status === 'verified')
+                ->visible(fn (Model $record) => $record->serviceRequests->last()?->status !== 'approved')
                 ->action(function (Model $record) {
                     $serviceRequest = $record->serviceRequests->last();
                     if ($serviceRequest) {

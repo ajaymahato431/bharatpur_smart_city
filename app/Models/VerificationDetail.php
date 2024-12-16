@@ -15,7 +15,7 @@ class VerificationDetail extends Model
         'form_date',
         'family_cost_no',
         'municipality',
-        'ward'
+        'ward',
     ];
 
     public function serviceRequest()

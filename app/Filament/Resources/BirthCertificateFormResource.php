@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BirthCertificateFormResource\Pages;
 use App\Models\BirthCertificateForm;
+use App\Models\VerificationDetail;
 use Filament\Forms;
 use Filament\Forms\Components;
 use Filament\Forms\Components\Repeater;
@@ -67,6 +68,57 @@ class BirthCertificateFormResource extends Resource
                             ->disableItemCreation(),
 
                     ]),
+
+                // Forms\Components\Fieldset::make('Verification Details')
+                //     ->schema([
+                //         Repeater::make('verification_details')
+                //             ->relationship('verificationDetails')
+                //             ->label('')
+                //             ->schema([
+                //                 Forms\Components\Select::make('service_request_id')
+                //                     ->label('Service Request')
+                //                     ->relationship('serviceRequest', 'id') // Assuming the relationship is defined in the model
+                //                     ->searchable()
+                //                     ->required(),
+
+                //                 Forms\Components\Select::make('officer_id')
+                //                     ->label('Officer')
+                //                     ->relationship('officer', 'name') // Assuming the `officer` model has a `name` field
+                //                     ->searchable()
+                //                     ->required(),
+
+                //                 Forms\Components\TextInput::make('form_no')
+                //                     ->label('Form Number')
+                //                     ->nullable()
+                //                     ->maxLength(255),
+
+                //                 Forms\Components\DatePicker::make('form_date')
+                //                     ->label('Form Date')
+                //                     ->default(now()) // Sets the default to the current date
+                //                     ->required(),
+
+                //                 Forms\Components\TextInput::make('family_cost_no')
+                //                     ->label('Family Cost Number')
+                //                     ->nullable()
+                //                     ->maxLength(255),
+
+                //                 Forms\Components\TextInput::make('municipality')
+                //                     ->label('Municipality')
+                //                     ->nullable()
+                //                     ->maxLength(255),
+
+                //                 Forms\Components\TextInput::make('ward')
+                //                     ->label('Ward')
+                //                     ->numeric()
+                //                     ->nullable(),
+                //             ])
+                //             ->defaultItems(1)
+                //             ->columns(3)
+                //             ->columnSpanFull()
+                //             ->deletable(false)
+                //             ->disableItemCreation(),
+
+                //     ]),
 
                 Forms\Components\Fieldset::make('Birth Certificate Form Details')
                     ->schema([
@@ -595,12 +647,58 @@ class BirthCertificateFormResource extends Resource
                 Action::make('mark_verified')
                     ->label('Verify')
                     ->visible(fn (Model $record) => $record->serviceRequests->last()?->status === 'pending')
-                    ->action(function (Model $record) {
+                    // ->action(function (Model $record) {
+                    //     $serviceRequest = $record->serviceRequests->last();
+                    //     if ($serviceRequest) {
+                    //         $serviceRequest->update(['status' => 'verified']);
+                    //     }
+                    // })
+                    ->action(function (Model $record, array $data) {
                         $serviceRequest = $record->serviceRequests->last();
+
                         if ($serviceRequest) {
-                            $serviceRequest->update(['status' => 'verified']);
+                            // Create a new VerificationDetail record
+                            VerificationDetail::create([
+                                'service_request_id' => $serviceRequest->id,
+                                'officer_id' => Auth::id(), // Assuming the logged-in user is the officer
+                                'form_no' => $data['form_no'],
+                                'family_cost_no' => $data['family_cost_no'],
+                                'municipality' => $data['municipality'],
+                                'ward' => $data['ward'],
+                            ]);
+
+                            // Update the service request status to "verified"
+                            $serviceRequest->update([
+                                'status' => 'verified',
+                                'verification_date' => now(),
+                            ]);
                         }
                     })
+                    ->form([
+                        Forms\Components\TextInput::make('form_no')
+                            ->label('Form Number')
+                            ->required(),
+
+                        Forms\Components\DatePicker::make('form_date')
+                            ->label('Form Date')
+                            ->default(now())
+                            ->required()
+                            ->disabled(),
+
+                        Forms\Components\TextInput::make('family_cost_no')
+                            ->label('Family Cost Number')
+                            ->required(),
+
+                        Forms\Components\TextInput::make('municipality')
+                            ->label('Municipality')
+                            ->default('Bharatpur')
+                            ->required(),
+
+                        Forms\Components\TextInput::make('ward')
+                            ->label('Ward')
+                            ->default(10)
+                            ->required(),
+                    ])
                     ->color('primary')
                     ->icon('heroicon-o-check-circle')
                     ->requiresConfirmation(),
@@ -611,7 +709,8 @@ class BirthCertificateFormResource extends Resource
                     ->action(function (Model $record) {
                         $serviceRequest = $record->serviceRequests->last();
                         if ($serviceRequest) {
-                            $serviceRequest->update(['status' => 'approved']);
+                            $serviceRequest->update(['status' => 'approved',
+                                'completion_date' => now()]);
                         }
                     })
                     ->color('success')
@@ -620,11 +719,12 @@ class BirthCertificateFormResource extends Resource
 
                 Action::make('reject')
                     ->label('Reject')
-                    ->visible(fn (Model $record) => $record->serviceRequests->last()?->status === 'verified')
+                    ->visible(fn (Model $record) => $record->serviceRequests->last()?->status !== 'approved')
                     ->action(function (Model $record) {
                         $serviceRequest = $record->serviceRequests->last();
                         if ($serviceRequest) {
-                            $serviceRequest->update(['status' => 'rejected']);
+                            $serviceRequest->update(['status' => 'rejected',
+                                'completion_date' => now()]);
                         }
                     })
                     ->color('danger')
