@@ -15,11 +15,10 @@ Route::get('/demo', function () {
 });
 
 // Route::post('/translate', [TranslationController::class, 'translate'])->name('translate');
+// Route::get('/login', [PageController::class, 'login'])->name('login');
+// Route::get('/form/birth-certificate-form', [PageController::class, 'birthCertificateForm'])->name('birthCertificateForm');
+
 
 Route::get('/', [HomepageController::class, 'home'])->name('home');
-// Route::get('/login', [PageController::class, 'login'])->name('login');
 Route::get('/register', [PageController::class, 'register'])->name('register');
-
-Route::get('/form/birth-certificate-form', [PageController::class, 'birthCertificateForm'])->name('birthCertificateForm');
-
-Route::post('/user-register', [UserController::class, 'userRegistration'])->name('userRegistration');
+Route::post('/registration', [UserController::class, 'registration'])->name('registration');

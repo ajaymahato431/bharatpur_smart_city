@@ -47,4 +47,14 @@ class Officer extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function officerDetails()
+    {
+        return $this->hasOne(OfficerDetail::class, 'officer_id');
+    }
+
+    public function verificationDetails()
+    {
+        return $this->hasOne(VerificationDetail::class, 'officer_id');
+    }
 }

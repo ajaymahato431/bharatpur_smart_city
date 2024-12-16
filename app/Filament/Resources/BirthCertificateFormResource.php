@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\BirthCertificateFormResource\Pages;
+use App\Filament\Resources\BirthCertificateFormResource\RelationManagers\ServiceRequestsRelationManager;
 use App\Models\BirthCertificateForm;
 use App\Models\VerificationDetail;
 use Filament\Forms;
@@ -13,6 +14,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -68,57 +70,6 @@ class BirthCertificateFormResource extends Resource
                             ->disableItemCreation(),
 
                     ]),
-
-                // Forms\Components\Fieldset::make('Verification Details')
-                //     ->schema([
-                //         Repeater::make('verification_details')
-                //             ->relationship('verificationDetails')
-                //             ->label('')
-                //             ->schema([
-                //                 Forms\Components\Select::make('service_request_id')
-                //                     ->label('Service Request')
-                //                     ->relationship('serviceRequest', 'id') // Assuming the relationship is defined in the model
-                //                     ->searchable()
-                //                     ->required(),
-
-                //                 Forms\Components\Select::make('officer_id')
-                //                     ->label('Officer')
-                //                     ->relationship('officer', 'name') // Assuming the `officer` model has a `name` field
-                //                     ->searchable()
-                //                     ->required(),
-
-                //                 Forms\Components\TextInput::make('form_no')
-                //                     ->label('Form Number')
-                //                     ->nullable()
-                //                     ->maxLength(255),
-
-                //                 Forms\Components\DatePicker::make('form_date')
-                //                     ->label('Form Date')
-                //                     ->default(now()) // Sets the default to the current date
-                //                     ->required(),
-
-                //                 Forms\Components\TextInput::make('family_cost_no')
-                //                     ->label('Family Cost Number')
-                //                     ->nullable()
-                //                     ->maxLength(255),
-
-                //                 Forms\Components\TextInput::make('municipality')
-                //                     ->label('Municipality')
-                //                     ->nullable()
-                //                     ->maxLength(255),
-
-                //                 Forms\Components\TextInput::make('ward')
-                //                     ->label('Ward')
-                //                     ->numeric()
-                //                     ->nullable(),
-                //             ])
-                //             ->defaultItems(1)
-                //             ->columns(3)
-                //             ->columnSpanFull()
-                //             ->deletable(false)
-                //             ->disableItemCreation(),
-
-                //     ]),
 
                 Forms\Components\Fieldset::make('Birth Certificate Form Details')
                     ->schema([
@@ -208,7 +159,7 @@ class BirthCertificateFormResource extends Resource
                                             ->numeric()
                                             ->nullable()
                                             ->required()
-                                            ->visible(fn ($get) => $get('is_weight_taken')), // Show only if 'is_weight_taken' is true
+                                            ->visible(fn($get) => $get('is_weight_taken')), // Show only if 'is_weight_taken' is true
                                     ]),
                             ]),
 
@@ -570,32 +521,32 @@ class BirthCertificateFormResource extends Resource
                                 Components\FileUpload::make('citizenship_front')
                                     ->label('Citizenship Front')
                                     ->reactive()
-                                    ->visible(fn (Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
+                                    ->visible(fn(Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
 
                                 Components\FileUpload::make('citizenship_back')
                                     ->label('Citizenship Back')
                                     ->reactive()
-                                    ->visible(fn (Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
+                                    ->visible(fn(Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
 
                                 Components\FileUpload::make('passport_copy')
                                     ->label('Passport Copy')
                                     ->reactive()
-                                    ->visible(fn (Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
+                                    ->visible(fn(Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
 
                                 Components\FileUpload::make('ward_residence_proof')
                                     ->label('Ward Residence Proof')
                                     ->reactive()
-                                    ->visible(fn (Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
+                                    ->visible(fn(Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
 
                                 Components\FileUpload::make('hospital_birth_report')
                                     ->label('Hospital Birth Report')
                                     ->reactive()
-                                    ->hidden(fn (Forms\Get $get) => ! in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
+                                    ->hidden(fn(Forms\Get $get) => ! in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
 
                                 Components\FileUpload::make('last_vaccine_proof')
                                     ->label('Last Vaccine Proof')
                                     ->reactive()
-                                    ->hidden(fn (Forms\Get $get) => in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
+                                    ->hidden(fn(Forms\Get $get) => in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
 
                                 Components\FileUpload::make('indian_citizen_proof')
                                     ->label('Indian Citizen Proof (In the case of Indian Citizen)'),
@@ -626,7 +577,7 @@ class BirthCertificateFormResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('serviceRequests.related_request_type')
-                    ->formatStateUsing(fn ($state) => [
+                    ->formatStateUsing(fn($state) => [
                         BirthCertificateForm::class => 'Birth Certificate Form',
                         // Add other models here
                     ][$state] ?? $state)
@@ -646,13 +597,7 @@ class BirthCertificateFormResource extends Resource
 
                 Action::make('mark_verified')
                     ->label('Verify')
-                    ->visible(fn (Model $record) => $record->serviceRequests->last()?->status === 'pending')
-                    // ->action(function (Model $record) {
-                    //     $serviceRequest = $record->serviceRequests->last();
-                    //     if ($serviceRequest) {
-                    //         $serviceRequest->update(['status' => 'verified']);
-                    //     }
-                    // })
+                    ->visible(fn(Model $record) => $record->serviceRequests->last()?->status === 'pending')
                     ->action(function (Model $record, array $data) {
                         $serviceRequest = $record->serviceRequests->last();
 
@@ -705,12 +650,14 @@ class BirthCertificateFormResource extends Resource
 
                 Action::make('approve')
                     ->label('Approve')
-                    ->visible(fn (Model $record) => $record->serviceRequests->last()?->status === 'verified')
+                    ->visible(fn(Model $record) => $record->serviceRequests->last()?->status === 'verified')
                     ->action(function (Model $record) {
                         $serviceRequest = $record->serviceRequests->last();
                         if ($serviceRequest) {
-                            $serviceRequest->update(['status' => 'approved',
-                                'completion_date' => now()]);
+                            $serviceRequest->update([
+                                'status' => 'approved',
+                                'completion_date' => now()
+                            ]);
                         }
                     })
                     ->color('success')
@@ -719,12 +666,14 @@ class BirthCertificateFormResource extends Resource
 
                 Action::make('reject')
                     ->label('Reject')
-                    ->visible(fn (Model $record) => $record->serviceRequests->last()?->status !== 'approved')
+                    ->visible(fn(Model $record) => $record->serviceRequests->last()?->status !== 'approved' && $record->serviceRequests->last()?->status !== 'rejected')
                     ->action(function (Model $record) {
                         $serviceRequest = $record->serviceRequests->last();
                         if ($serviceRequest) {
-                            $serviceRequest->update(['status' => 'rejected',
-                                'completion_date' => now()]);
+                            $serviceRequest->update([
+                                'status' => 'rejected',
+                                'completion_date' => now()
+                            ]);
                         }
                     })
                     ->color('danger')
@@ -745,7 +694,7 @@ class BirthCertificateFormResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ServiceRequestsRelationManager::class,
         ];
     }
 

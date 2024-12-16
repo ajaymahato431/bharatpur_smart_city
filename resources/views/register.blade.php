@@ -12,7 +12,7 @@
                         <p>Login Your Account <a href="{{ route('filament.user.auth.login') }}">Click here</a></p>
                     </div>
                     <form class="contact-bx" method="POST" enctype="multipart/form-data"
-                        action="{{ route('userRegistration') }}">
+                        action="{{ route('registration') }}">
                         @csrf
                         <div class="row">
                             <div class="col-md-6">

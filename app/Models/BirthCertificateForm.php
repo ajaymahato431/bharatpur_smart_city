@@ -22,8 +22,8 @@ class BirthCertificateForm extends Model
         return $this->hasOne(BirthDocument::class, 'birth_certificate_form_id');
     }
 
-    public function verificationDetails(): HasOneThrough
-    {
-        return $this->hasOneThrough(VerificationDetail::class, ServiceRequest::class);
-    }
+    // public function verificationDetails(): HasOneThrough
+    // {
+    //     return $this->hasOneThrough(VerificationDetail::class, ServiceRequest::class);
+    // }
 }

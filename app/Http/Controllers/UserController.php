@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function userRegistration(Request $request)
+
+    public function registration(Request $request)
     {
         // Validate the incoming request data
         $request->validate([
@@ -47,6 +48,6 @@ class UserController extends Controller
             'gender' => $request->gender,
         ]);
 
-        return redirect()->back()->with('success', 'User registered successfully!');
+        return redirect('user/login')->with('success', 'User registered successfully!');
     }
 }

@@ -22,4 +22,9 @@ class VerificationDetail extends Model
     {
         return $this->belongsTo(ServiceRequest::class, 'service_request_id');
     }
+
+    public function officers()
+    {
+        return $this->belongsTo(Officer::class, 'officer_id');
+    }
 }

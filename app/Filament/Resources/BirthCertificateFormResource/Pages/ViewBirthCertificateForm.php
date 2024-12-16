@@ -11,13 +11,14 @@ class ViewBirthCertificateForm extends ViewRecord
 {
     protected static string $resource = BirthCertificateFormResource::class;
 
+
     protected function getHeaderActions(): array
     {
         return [
             // Actions\EditAction::make(),
             Actions\Action::make('mark_verified')
                 ->label('Verify')
-                ->visible(fn (Model $record) => $record->serviceRequests->last()?->status === 'pending')
+                ->visible(fn(Model $record) => $record->serviceRequests->last()?->status === 'pending')
                 ->action(function (Model $record) {
                     $serviceRequest = $record->serviceRequests->last();
                     if ($serviceRequest) {
@@ -30,7 +31,7 @@ class ViewBirthCertificateForm extends ViewRecord
 
             Actions\Action::make('approve')
                 ->label('Approve')
-                ->visible(fn (Model $record) => $record->serviceRequests->last()?->status === 'verified')
+                ->visible(fn(Model $record) => $record->serviceRequests->last()?->status === 'verified')
                 ->action(function (Model $record) {
                     $serviceRequest = $record->serviceRequests->last();
                     if ($serviceRequest) {
@@ -43,7 +44,7 @@ class ViewBirthCertificateForm extends ViewRecord
 
             Actions\Action::make('reject')
                 ->label('Reject')
-                ->visible(fn (Model $record) => $record->serviceRequests->last()?->status !== 'approved')
+                ->visible(fn(Model $record) => $record->serviceRequests->last()?->status !== 'approved')
                 ->action(function (Model $record) {
                     $serviceRequest = $record->serviceRequests->last();
                     if ($serviceRequest) {
