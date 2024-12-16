@@ -3,15 +3,15 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\HeroSectionResource\Pages;
-use App\Filament\Resources\HeroSectionResource\RelationManagers;
 use App\Models\HeroSection;
-use Filament\Forms;
+use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class HeroSectionResource extends Resource
 {
@@ -23,30 +23,49 @@ class HeroSectionResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('tagline')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('description')
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\FileUpload::make('featured_image')
-                    ->image()
-                    ->required(),
-                Forms\Components\TextInput::make('button1_text')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('button1_link')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('button2_text')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('button2_link')
-                    ->required()
-                    ->maxLength(255),
+                Fieldset::make('Basic Details')
+                    ->schema([
+                        TextInput::make('tagline')
+                            ->label('Tagline')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('title')
+                            ->label('Title')
+                            ->required()
+                            ->maxLength(255),
+                        Textarea::make('description')
+                            ->label('Description')
+                            ->required()
+                            ->columnSpanFull(),
+                    ]),
+
+                Fieldset::make('Buttons')
+                    ->schema([
+                        TextInput::make('button1_text')
+                            ->label('Button 1 Text')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('button1_link')
+                            ->label('Button 1 Link')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('button2_text')
+                            ->label('Button 2 Text')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('button2_link')
+                            ->label('Button 2 Link')
+                            ->required()
+                            ->maxLength(255),
+                    ]),
+
+                Fieldset::make('Media')
+                    ->schema([
+                        FileUpload::make('featured_image')
+                            ->label('Featured Image')
+                            ->image()
+                            ->required(),
+                    ]),
             ]);
     }
 
