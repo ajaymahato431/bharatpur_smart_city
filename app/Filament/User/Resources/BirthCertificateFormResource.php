@@ -3,20 +3,15 @@
 namespace App\Filament\User\Resources;
 
 use App\Filament\User\Resources\BirthCertificateFormResource\Pages;
-use App\Filament\User\Resources\BirthCertificateFormResource\RelationManagers;
 use App\Models\BirthCertificateForm;
 use Filament\Forms;
+use Filament\Forms\Components;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components;
-use Filament\Forms\Components\Repeater;
 use Illuminate\Support\Facades\Auth;
-use Filament\Forms\Components\MorphToSelect;
-use Filament\Forms\Components\MorphToSelect\Type;
 
 class BirthCertificateFormResource extends Resource
 {
@@ -35,7 +30,7 @@ class BirthCertificateFormResource extends Resource
                             ->label('')
                             ->schema([
                                 Forms\Components\TextInput::make('user_id')
-                                    ->default(fn() => Auth::id())
+                                    ->default(fn () => Auth::id())
                                     ->required()
                                     ->numeric()
                                     ->readOnly(),
@@ -143,6 +138,7 @@ class BirthCertificateFormResource extends Resource
                                                 'hospital' => 'Hospital',
                                                 'other' => 'Other',
                                             ])
+                                            ->reactive()
                                             ->required(),
                                     ]),
                                 Components\Grid::make(2)
@@ -156,7 +152,7 @@ class BirthCertificateFormResource extends Resource
                                             ->numeric()
                                             ->nullable()
                                             ->required()
-                                            ->visible(fn($get) => $get('is_weight_taken')), // Show only if 'is_weight_taken' is true
+                                            ->visible(fn ($get) => $get('is_weight_taken')), // Show only if 'is_weight_taken' is true
                                     ]),
                             ]),
 
@@ -168,7 +164,7 @@ class BirthCertificateFormResource extends Resource
                                         Components\TextArea::make('disable_type')
                                             ->label('Disabled Type')
                                             ->nullable(),
-                                    ])
+                                    ]),
                             ]),
 
                         Components\Section::make('Birth Details')
@@ -210,7 +206,7 @@ class BirthCertificateFormResource extends Resource
                                             ->label('Local Address')
                                             ->maxLength(255)
                                             ->nullable(),
-                                    ])
+                                    ]),
                             ]),
 
                         Components\Section::make('Parents Details')
@@ -248,7 +244,6 @@ class BirthCertificateFormResource extends Resource
                                                             ->nullable(),
                                                     ]),
                                             ]),
-
 
                                         Components\Tabs\Tab::make('Father')
                                             ->schema([
@@ -423,6 +418,7 @@ class BirthCertificateFormResource extends Resource
                                     ->schema([
                                         Components\TextInput::make('father_passport_no')
                                             ->label('Father\'s Passport Number')
+                                            ->reactive()
                                             ->maxLength(50)
                                             ->nullable(),
                                         Components\TextInput::make('father_country')
@@ -431,6 +427,7 @@ class BirthCertificateFormResource extends Resource
                                             ->nullable(),
                                         Components\TextInput::make('mother_passport_no')
                                             ->label('Mother\'s Passport Number')
+                                            ->reactive()
                                             ->maxLength(50)
                                             ->nullable(),
                                         Components\TextInput::make('mother_country')
@@ -438,7 +435,7 @@ class BirthCertificateFormResource extends Resource
                                             ->maxLength(100)
                                             ->nullable(),
 
-                                    ])
+                                    ]),
                             ]),
 
                         Components\Section::make('Parent Marriage Details')
@@ -453,7 +450,7 @@ class BirthCertificateFormResource extends Resource
                                         Components\DatePicker::make('marriage_date')
                                             ->label('Marriage Date')
                                             ->nullable(),
-                                    ])
+                                    ]),
                             ]),
 
                         Components\Section::make('Informer Details')
@@ -505,10 +502,59 @@ class BirthCertificateFormResource extends Resource
                                             ->label('Passport Issued Country')
                                             ->maxLength(100)
                                             ->nullable(),
-                                    ])
+                                    ]),
 
                             ]),
-                    ])
+                    ]),
+
+                Forms\Components\Fieldset::make('Birth Certificate Form Documents')
+                    ->schema([
+                        Repeater::make('birth_documents')
+                            ->relationship('birthDocuments')
+                            ->label('')
+                            ->schema([
+                                Components\FileUpload::make('citizenship_front')
+                                    ->label('Citizenship Front')
+                                    ->reactive()
+                                    ->visible(fn (Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
+
+                                Components\FileUpload::make('citizenship_back')
+                                    ->label('Citizenship Back')
+                                    ->reactive()
+                                    ->visible(fn (Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
+
+                                Components\FileUpload::make('passport_copy')
+                                    ->label('Passport Copy')
+                                    ->reactive()
+                                    ->visible(fn (Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
+
+                                Components\FileUpload::make('ward_residence_proof')
+                                    ->label('Ward Residence Proof')
+                                    ->reactive()
+                                    ->visible(fn (Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
+
+                                Components\FileUpload::make('hospital_birth_report')
+                                    ->label('Hospital Birth Report')
+                                    ->reactive()
+                                    ->hidden(fn (Forms\Get $get) => ! in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
+
+                                Components\FileUpload::make('last_vaccine_proof')
+                                    ->label('Last Vaccine Proof')
+                                    ->reactive()
+                                    ->hidden(fn (Forms\Get $get) => in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
+
+                                Components\FileUpload::make('indian_citizen_proof')
+                                    ->label('Indian Citizen Proof (In the case of Indian Citizen)'),
+
+                                Components\FileUpload::make('nofather_police_report')
+                                    ->label('No-Father Police Report (In the case of  no information of father)'),
+                            ])
+                            ->defaultItems(1)
+                            ->columns(3)
+                            ->columnSpanFull()
+                            ->deletable(false)
+                            ->disableItemCreation(),
+                    ]),
 
             ]);
     }
@@ -517,174 +563,22 @@ class BirthCertificateFormResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('n_first_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('n_middle_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('n_surname')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('e_first_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_middle_name')
+                    ->label('Child Name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('e_surname')
+                    ->label('Child Surname')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('birth_date')
-                    ->date()
+                Tables\Columns\TextColumn::make('serviceRequests.related_request_type')
+                    ->formatStateUsing(fn ($state) => [
+                        BirthCertificateForm::class => 'Birth Certificate Form',
+                        // Add other models here
+                    ][$state] ?? $state)
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('gender'),
-                Tables\Columns\TextColumn::make('birth_type'),
-                Tables\Columns\IconColumn::make('is_weight_taken')
-                    ->boolean(),
-                Tables\Columns\TextColumn::make('birth_weight')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('serviceRequests.status')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('birth_attendant_type')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('birth_place'),
-                Tables\Columns\TextColumn::make('birth_province')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('birth_municipality')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('birth_ward')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('n_birth_country')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('n_birth_state')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('n_birth_local_address')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_birth_country')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_birth_state')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_birth_local_address')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('n_grandfather_first_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('n_grandfather_middle_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('n_grandfather_last_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_grandfather_first_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_grandfather_middle_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_grandfather_last_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('n_father_first_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('n_father_middle_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('n_father_last_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_father_first_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_father_middle_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_father_last_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('n_mother_first_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('n_mother_middle_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('n_mother_last_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_mother_first_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_mother_middle_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_mother_last_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('father_province')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('father_municipality')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('father_ward')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('father_street')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('father_village')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('father_house_no')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('father_citizenship_no')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('father_dob')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('father_education')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('father_religion')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('father_cast')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('mother_province')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('mother_municipality')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('mother_ward')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('mother_street')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('mother_village')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('mother_house_no')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('mother_citizenship_no')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('mother_dob')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('mother_education')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('mother_religion')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('mother_cast')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('father_passport_no')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('father_country')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('mother_passport_no')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('mother_country')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('marriage_registration_no')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('marriage_date')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('n_informer_first_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('n_informer_middle_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('n_informer_last_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_informer_first_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_informer_middle_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_informer_last_name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('informer_relation_with_child')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('citizenship_number')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_passport_number')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('n_passport_number')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('e_issued_country')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('n_issued_country')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('form_filled_date')
                     ->date()
                     ->sortable(),

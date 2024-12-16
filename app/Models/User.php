@@ -52,4 +52,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(ServiceRequest::class, 'user_id');
     }
+
+    public function userDetails()
+    {
+        return $this->hasOne(UserDetail::class, 'user_id');
+    }
 }

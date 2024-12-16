@@ -162,7 +162,7 @@
                                         }
                                     </script>
                                 </li>
-                                <li><a href="{{ route('login') }}">Login</a></li>
+                                <li><a href="{{ route('filament.user.auth.login') }}">Login</a></li>
                                 <li><a href="{{ route('register') }}">Register</a></li>
                             </ul>
                         </div>
