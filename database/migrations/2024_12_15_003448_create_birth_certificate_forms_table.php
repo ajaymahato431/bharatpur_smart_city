@@ -25,19 +25,16 @@ return new class extends Migration
             $table->enum('birth_type', ['single', 'twins', 'tripletsOrMore']);
             $table->boolean('is_weight_taken')->nullable();
             $table->integer('birth_weight')->nullable(); // in grams.
-            $table->integer('birth_attendant_type'); // doctor, nurse, anm
+            $table->enum('birth_attendant_type', ['doctor', 'nurse', 'localSudini', 'trainedSudini', 'familyMembers', 'others']); // doctor, nurse, anm
             $table->enum('birth_place', ['home', 'healthpost', 'hospital', 'other']);
             $table->string('birth_province', 50)->nullable();
             $table->string('birth_municipality', 100)->nullable();
             $table->integer('birth_ward')->nullable();
 
             // If born in foreign
-            $table->string('n_birth_country', 100)->nullable();
-            $table->string('n_birth_state', 100)->nullable();
-            $table->string('n_birth_local_address', 255)->nullable();
-            $table->string('e_birth_country', 100)->nullable();
-            $table->string('e_birth_state', 100)->nullable();
-            $table->string('e_birth_local_address', 255)->nullable();
+            $table->string('birth_country', 100)->nullable();
+            $table->string('birth_state', 100)->nullable();
+            $table->string('birth_local_address', 255)->nullable();
 
             // If disabled
             $table->text('disable_type')->nullable();
@@ -114,13 +111,13 @@ return new class extends Migration
 
             $table->string('citizenship_number', 50)->nullable();
             // If foreigner
-            $table->string('e_passport_number', 50)->nullable();
-            $table->string('n_passport_number', 50)->nullable();
+            $table->string('passport_number', 50)->nullable();
 
-            $table->string('e_issued_country', 100)->nullable();
-            $table->string('n_issued_country', 100)->nullable();
+            $table->string('issued_country', 100)->nullable();
 
-            $table->date('form_filled_date');
+            $table->date('form_filled_date')->default(now());
+
+            $table->timestamps();
         });
     }
 

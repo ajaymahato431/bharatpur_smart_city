@@ -47,4 +47,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function serviceRequests()
+    {
+        return $this->hasMany(ServiceRequest::class, 'user_id');
+    }
 }

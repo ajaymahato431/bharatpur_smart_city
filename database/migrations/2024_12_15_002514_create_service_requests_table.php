@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('service_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id'); // Foreign key to the users table
-            $table->unsignedBigInteger('service_id'); // Foreign key to the services table
             $table->unsignedBigInteger('related_request_id')->nullable(); // Polymorphic ID
             $table->string('related_request_type')->nullable(); // Polymorphic type
             $table->enum('status', ['pending', 'verified', 'approved', 'rejected'])->default('pending'); // Status
@@ -22,7 +21,6 @@ return new class extends Migration
 
             // Foreign Key Constraints
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
 
             // Composite Index for Polymorphic Relationship
             $table->index(['related_request_id', 'related_request_type']);

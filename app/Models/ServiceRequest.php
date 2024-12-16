@@ -20,14 +20,14 @@ class ServiceRequest extends Model
         'completion_date'
     ];
 
-    public function service()
-    {
-        return $this->belongsTo(Service::class, 'service_id');
-    }
-
     public function documents()
     {
         return $this->hasMany(Document::class, 'service_request_id');
+    }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function verificationDetails()

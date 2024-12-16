@@ -9,7 +9,7 @@
                 <div class="account-container">
                     <div class="heading-bx left">
                         <h2 class="title-head">Sign Up <span>Now</span></h2>
-                        <p>Login Your Account <a href="{{ route('login') }}">Click here</a></p>
+                        <p>Login Your Account <a href="{{ route('filament.user.auth.login') }}">Click here</a></p>
                     </div>
                     <form class="contact-bx" method="POST" enctype="multipart/form-data"
                         action="{{ route('userRegistration') }}">
