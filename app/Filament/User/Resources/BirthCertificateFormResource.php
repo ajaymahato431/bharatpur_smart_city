@@ -12,6 +12,8 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder; // Import Eloquent Builder
+
 
 class BirthCertificateFormResource extends Resource
 {
@@ -30,7 +32,7 @@ class BirthCertificateFormResource extends Resource
                             ->label('')
                             ->schema([
                                 Forms\Components\TextInput::make('user_id')
-                                    ->default(fn () => Auth::id())
+                                    ->default(fn() => Auth::id())
                                     ->required()
                                     ->numeric()
                                     ->readOnly(),
@@ -152,7 +154,7 @@ class BirthCertificateFormResource extends Resource
                                             ->numeric()
                                             ->nullable()
                                             ->required()
-                                            ->visible(fn ($get) => $get('is_weight_taken')), // Show only if 'is_weight_taken' is true
+                                            ->visible(fn($get) => $get('is_weight_taken')), // Show only if 'is_weight_taken' is true
                                     ]),
                             ]),
 
@@ -516,32 +518,32 @@ class BirthCertificateFormResource extends Resource
                                 Components\FileUpload::make('citizenship_front')
                                     ->label('Citizenship Front')
                                     ->reactive()
-                                    ->visible(fn (Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
+                                    ->visible(fn(Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
 
                                 Components\FileUpload::make('citizenship_back')
                                     ->label('Citizenship Back')
                                     ->reactive()
-                                    ->visible(fn (Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
+                                    ->visible(fn(Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
 
                                 Components\FileUpload::make('passport_copy')
                                     ->label('Passport Copy')
                                     ->reactive()
-                                    ->visible(fn (Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
+                                    ->visible(fn(Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
 
                                 Components\FileUpload::make('ward_residence_proof')
                                     ->label('Ward Residence Proof')
                                     ->reactive()
-                                    ->visible(fn (Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
+                                    ->visible(fn(Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
 
                                 Components\FileUpload::make('hospital_birth_report')
                                     ->label('Hospital Birth Report')
                                     ->reactive()
-                                    ->hidden(fn (Forms\Get $get) => ! in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
+                                    ->hidden(fn(Forms\Get $get) => ! in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
 
                                 Components\FileUpload::make('last_vaccine_proof')
                                     ->label('Last Vaccine Proof')
                                     ->reactive()
-                                    ->hidden(fn (Forms\Get $get) => in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
+                                    ->hidden(fn(Forms\Get $get) => in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
 
                                 Components\FileUpload::make('indian_citizen_proof')
                                     ->label('Indian Citizen Proof (In the case of Indian Citizen)'),
@@ -562,6 +564,11 @@ class BirthCertificateFormResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function (Builder $query) {
+                $query->whereHas('serviceRequests', function ($query) {
+                    $query->where('user_id', Auth::id());
+                });
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('e_first_name')
                     ->label('Child Name')
@@ -570,7 +577,7 @@ class BirthCertificateFormResource extends Resource
                     ->label('Child Surname')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('serviceRequests.related_request_type')
-                    ->formatStateUsing(fn ($state) => [
+                    ->formatStateUsing(fn($state) => [
                         BirthCertificateForm::class => 'Birth Certificate Form',
                         // Add other models here
                     ][$state] ?? $state)
@@ -578,9 +585,24 @@ class BirthCertificateFormResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('serviceRequests.status')
                     ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('form_filled_date')
+                    ->sortable()
+                    ->badge()
+                    ->colors([
+                        'danger' => 'rejected', // Red for rejected
+                        'success' => 'approved', // Green for approved
+                        'warning' => 'pending', // Yellow for pending
+                    ]),
+                Tables\Columns\TextColumn::make('serviceRequests.submission_date')
+                    ->label('Submission Date')
                     ->date()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('serviceRequests.verification_date')
+                    ->date()
+                    ->label('Verification Date')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('serviceRequests.completion_date')
+                    ->date()
+                    ->label('Completion Date')
                     ->sortable(),
             ])
             ->filters([

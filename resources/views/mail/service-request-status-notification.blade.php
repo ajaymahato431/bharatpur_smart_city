@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>SmartWada User Registraton</title>
+    <title>SmartWada Service Request</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -61,13 +61,18 @@
     <div class="email-container">
         <!-- Email Header -->
         <div class="header">
-            <h1>SmartWada User Registration Update</h1>
+            <h1>SmartWada Service Request Update</h1>
         </div>
 
         <!-- Email Content -->
         <div class="content">
             <p>Dear {{ $data['name'] }},</p>
-            <p>{{ $data['message1'] }}</p>
+            <p>Your request to SmartWada for <strong>{{ $data['heading'] }}</strong> has been
+                <strong>{{ $data['message1'] }}</strong>
+            </p>
+            @if (!empty($data['rejectMessage']))
+                <p>From ward officer: {{ $data['rejectMessage'] }}</p>
+            @endif
             <p>{{ $data['message2'] }}</p>
             <p>Thank you and regards,<br>SmartWada Team</p>
         </div>

@@ -33,7 +33,8 @@ class UserObserver
             $data = [
                 "name" => $user->name,
                 "subject" => "User Registration Approved",
-                "message" => "Your registration request to SmartWada has been approved. Your Login Credentials are Email: $user->email and Password: $password",
+                "message1" => "Your registration request to SmartWada has been approved.",
+                "message2" => "Your Login Credentials are Email: $user->email and Password: $password",
             ];
 
             Mail::to($user->email)->send(new EmailNotification($data));

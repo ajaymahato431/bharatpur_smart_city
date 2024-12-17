@@ -14,7 +14,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder; // Import Eloquent Builder
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -43,14 +43,6 @@ class BirthCertificateFormResource extends Resource
                                     ->relationship('users', 'email')
                                     ->required(),
 
-                                Forms\Components\Select::make('related_request_type')
-                                    ->options([
-                                        BirthCertificateForm::class => 'Birth Certificate Form',
-                                        // Add other models here
-                                    ])
-                                    ->label('Related Request Type')
-                                    ->required(),
-
                                 Forms\Components\Select::make('status')
                                     ->options([
                                         'pending' => 'Pending',
@@ -62,9 +54,25 @@ class BirthCertificateFormResource extends Resource
                                     ->label('Status')
                                     ->disabled()
                                     ->required(),
+
+                                Forms\Components\Select::make('related_request_type')
+                                    ->options([
+                                        BirthCertificateForm::class => 'Birth Certificate Form',
+                                        // Add other models here
+                                    ])
+                                    ->label('Related Request Type')
+                                    ->required(),
+
+                                Forms\Components\DatePicker::make('submission_date')
+                                    ->required(),
+                                Forms\Components\DatePicker::make('verification_date')
+                                    ->required(),
+                                Forms\Components\DatePicker::make('completion_date')
+                                    ->required(),
+
                             ])
                             ->defaultItems(1)
-                            ->columns(2)
+                            ->columns(3)
                             ->columnSpanFull()
                             ->deletable(false)
                             ->disableItemCreation(),
@@ -585,9 +593,24 @@ class BirthCertificateFormResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('serviceRequests.status')
                     ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('form_filled_date')
+                    ->sortable()
+                    ->badge()
+                    ->colors([
+                        'danger' => 'rejected', // Red for rejected
+                        'success' => 'approved', // Green for approved
+                        'warning' => 'pending', // Yellow for pending
+                    ]),
+                Tables\Columns\TextColumn::make('serviceRequests.submission_date')
+                    ->label('Submission Date')
                     ->date()
+                    ->sortable(),
+                // Tables\Columns\TextColumn::make('serviceRequests.verification_date')
+                //     ->date()
+                //     ->label('Verification Date')
+                //     ->sortable(),
+                Tables\Columns\TextColumn::make('serviceRequests.completion_date')
+                    ->date()
+                    ->label('Completion Date')
                     ->sortable(),
             ])
             ->filters([
@@ -622,6 +645,7 @@ class BirthCertificateFormResource extends Resource
                     ->form([
                         Forms\Components\TextInput::make('form_no')
                             ->label('Form Number')
+                            ->unique('verification_details', 'form_no')
                             ->required(),
 
                         Forms\Components\DatePicker::make('form_date')
@@ -667,15 +691,24 @@ class BirthCertificateFormResource extends Resource
                 Action::make('reject')
                     ->label('Reject')
                     ->visible(fn(Model $record) => $record->serviceRequests->last()?->status !== 'approved' && $record->serviceRequests->last()?->status !== 'rejected')
-                    ->action(function (Model $record) {
+                    ->action(function (Model $record, array $data) {
                         $serviceRequest = $record->serviceRequests->last();
+
                         if ($serviceRequest) {
+
+                            // Update the service request status to "verified"
                             $serviceRequest->update([
                                 'status' => 'rejected',
+                                'reject_message' => $data['reject_message'],
                                 'completion_date' => now()
                             ]);
                         }
                     })
+                    ->form([
+                        Forms\Components\TextInput::make('reject_message')
+                            ->label('Reject Message')
+                            ->required(),
+                    ])
                     ->color('danger')
                     ->icon('heroicon-o-x-circle')
                     ->requiresConfirmation(),

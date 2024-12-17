@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\ServiceRequest;
 use App\Models\User;
+use App\Observers\ServiceRequestObserver;
 use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
@@ -25,5 +27,6 @@ class AppServiceProvider extends ServiceProvider
         Model::unguard();
 
         User::observe(UserObserver::class);
+        ServiceRequest::observe(ServiceRequestObserver::class);
     }
 }
