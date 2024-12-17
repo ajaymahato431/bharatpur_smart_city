@@ -70,7 +70,7 @@ return new class extends Migration
             $table->string('father_street', 100)->nullable();
             $table->string('father_village', 100)->nullable();
             $table->integer('father_house_no')->nullable();
-            $table->string('father_citizenship_no', 50)->nullable();
+            $table->string(column: 'father_citizenship_no', 50)->nullable();
             $table->date('father_dob')->nullable();
             $table->string('father_education', 100)->nullable();
             $table->text('father_occupation')->nullable();

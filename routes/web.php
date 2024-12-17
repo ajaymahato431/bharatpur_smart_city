@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\TranslationController;
@@ -22,3 +23,6 @@ Route::get('/demo', function () {
 Route::get('/', [HomepageController::class, 'home'])->name('home');
 Route::get('/register', [PageController::class, 'register'])->name('register');
 Route::post('/registration', [UserController::class, 'registration'])->name('registration');
+
+Route::get('/birth-certificate/pdf/{id}', [CertificateController::class, 'birthCertificatePdf'])
+    ->name('birth-certificate.pdf');

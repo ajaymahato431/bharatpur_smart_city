@@ -713,6 +713,14 @@ class BirthCertificateFormResource extends Resource
                     ->icon('heroicon-o-x-circle')
                     ->requiresConfirmation(),
 
+                Action::make('Download Certificate')
+                    ->visible(fn(Model $record) => $record->serviceRequests->last()?->status === 'approved')
+                    ->url(fn($record) => route('birth-certificate.pdf', $record->id))
+                    ->openUrlInNewTab()
+                    ->label('Download Certificate')
+                    ->icon('heroicon-o-arrow-down-tray'),
+
+
                 Tables\Actions\ViewAction::make(),
                 // Tables\Actions\EditAction::make(),
 

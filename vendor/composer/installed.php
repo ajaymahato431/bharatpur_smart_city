@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'd028520c7d4395bb0567a0ff33a8b370f5f086b3',
+        'reference' => 'c685c747feb54ffd15d69cdb0043d0849d7e998c',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -622,7 +622,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'd028520c7d4395bb0567a0ff33a8b370f5f086b3',
+            'reference' => 'c685c747feb54ffd15d69cdb0043d0849d7e998c',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1274,6 +1274,15 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+        'spatie/browsershot' => array(
+            'pretty_version' => '5.0.3',
+            'version' => '5.0.3.0',
+            'reference' => 'aae8a337f73f63fc41c4c759fc397ce725312367',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spatie/browsershot',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'spatie/color' => array(
             'pretty_version' => '1.6.2',
             'version' => '1.6.2.0',
@@ -1301,11 +1310,29 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'spatie/laravel-pdf' => array(
+            'pretty_version' => '1.5.3',
+            'version' => '1.5.3.0',
+            'reference' => '08af7423cc9b089f359798c8628fd824c51990ac',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spatie/laravel-pdf',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'spatie/once' => array(
             'dev_requirement' => false,
             'replaced' => array(
                 0 => '*',
             ),
+        ),
+        'spatie/temporary-directory' => array(
+            'pretty_version' => '2.2.1',
+            'version' => '2.2.1.0',
+            'reference' => '76949fa18f8e1a7f663fd2eaa1d00e0bcea0752a',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spatie/temporary-directory',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'staabm/side-effects-detector' => array(
             'pretty_version' => '1.0.5',
