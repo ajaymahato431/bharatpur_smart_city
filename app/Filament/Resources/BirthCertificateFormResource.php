@@ -119,9 +119,9 @@ class BirthCertificateFormResource extends Resource
                                         Components\Select::make('gender')
                                             ->label('Gender')
                                             ->options([
-                                                'male' => 'Male',
-                                                'female' => 'Female',
-                                                'other' => 'Other',
+                                                'Male/पुरुष' => 'Male/पुरुष',
+                                                'Female/महिला' => 'Female/महिला',
+                                                'Other/अन्य' => 'Other/अन्य',
                                             ])
                                             ->required(),
                                     ]),
@@ -167,7 +167,7 @@ class BirthCertificateFormResource extends Resource
                                             ->numeric()
                                             ->nullable()
                                             ->required()
-                                            ->visible(fn($get) => $get('is_weight_taken')), // Show only if 'is_weight_taken' is true
+                                            ->visible(fn ($get) => $get('is_weight_taken')), // Show only if 'is_weight_taken' is true
                                     ]),
                             ]),
 
@@ -188,15 +188,35 @@ class BirthCertificateFormResource extends Resource
                                 Components\Grid::make(3)
                                     ->schema([
 
-                                        Components\TextInput::make('birth_province')
+                                        Components\TextInput::make('n_birth_province')
                                             ->label('Province')
                                             ->maxLength(50)
                                             ->nullable(),
-                                        Components\TextInput::make('birth_municipality')
+                                        Components\TextInput::make('n_birth_district')
+                                            ->label('Province')
+                                            ->maxLength(50)
+                                            ->nullable(),
+                                        Components\TextInput::make('n_birth_municipality')
                                             ->label('Municipality')
                                             ->maxLength(100)
                                             ->nullable(),
-                                        Components\TextInput::make('birth_ward')
+                                        Components\TextInput::make('n_birth_ward')
+                                            ->label('Ward Number')
+                                            ->numeric()
+                                            ->nullable(),
+                                        Components\TextInput::make('e_birth_province')
+                                            ->label('Province')
+                                            ->maxLength(50)
+                                            ->nullable(),
+                                        Components\TextInput::make('e_birth_district')
+                                            ->label('Province')
+                                            ->maxLength(50)
+                                            ->nullable(),
+                                        Components\TextInput::make('e_birth_municipality')
+                                            ->label('Municipality')
+                                            ->maxLength(100)
+                                            ->nullable(),
+                                        Components\TextInput::make('e_birth_ward')
                                             ->label('Ward Number')
                                             ->numeric()
                                             ->nullable(),
@@ -221,6 +241,48 @@ class BirthCertificateFormResource extends Resource
                                             ->label('Local Address')
                                             ->maxLength(255)
                                             ->nullable(),
+                                    ]),
+                            ]),
+
+                        Components\Section::make('Child Permanent Address')
+                            ->description('Enter the permananet address of child.')
+                            ->schema([
+                                Components\Grid::make(3)
+                                    ->schema([
+
+                                        Components\TextInput::make('n_permanent_province')
+                                            ->label('Province')
+                                            ->maxLength(50)
+                                            ->nullable(),
+                                        Components\TextInput::make('n_permanent_district')
+                                            ->label('Province')
+                                            ->maxLength(50)
+                                            ->nullable(),
+                                        Components\TextInput::make('n_permanent_municipality')
+                                            ->label('Municipality')
+                                            ->maxLength(100)
+                                            ->nullable(),
+                                        Components\TextInput::make('n_permanent_ward')
+                                            ->label('Ward Number')
+                                            ->numeric()
+                                            ->nullable(),
+                                        Components\TextInput::make('e_permanent_province')
+                                            ->label('Province')
+                                            ->maxLength(50)
+                                            ->nullable(),
+                                        Components\TextInput::make('e_permanent_district')
+                                            ->label('Province')
+                                            ->maxLength(50)
+                                            ->nullable(),
+                                        Components\TextInput::make('e_permanent_municipality')
+                                            ->label('Municipality')
+                                            ->maxLength(100)
+                                            ->nullable(),
+                                        Components\TextInput::make('e_permanent_ward')
+                                            ->label('Ward Number')
+                                            ->numeric()
+                                            ->nullable(),
+
                                     ]),
                             ]),
 
@@ -503,15 +565,15 @@ class BirthCertificateFormResource extends Resource
                                             ->label('Relation with Child')
                                             ->required()
                                             ->maxLength(50),
-                                        Components\TextInput::make('citizenship_number')
+                                        Components\TextInput::make('informer_citizenship_no')
                                             ->label('Citizenship Number')
                                             ->maxLength(50)
                                             ->nullable(),
-                                        Components\TextInput::make('passport_number')
+                                        Components\TextInput::make('informer_passport_number')
                                             ->label('Passport Number (if foreigner)')
                                             ->maxLength(50)
                                             ->nullable(),
-                                        Components\TextInput::make('issued_country')
+                                        Components\TextInput::make('informer_issued_country')
                                             ->label('Passport Issued Country')
                                             ->maxLength(100)
                                             ->nullable(),
@@ -529,32 +591,32 @@ class BirthCertificateFormResource extends Resource
                                 Components\FileUpload::make('citizenship_front')
                                     ->label('Citizenship Front')
                                     ->reactive()
-                                    ->visible(fn(Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
+                                    ->visible(fn (Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
 
                                 Components\FileUpload::make('citizenship_back')
                                     ->label('Citizenship Back')
                                     ->reactive()
-                                    ->visible(fn(Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
+                                    ->visible(fn (Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
 
                                 Components\FileUpload::make('passport_copy')
                                     ->label('Passport Copy')
                                     ->reactive()
-                                    ->visible(fn(Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
+                                    ->visible(fn (Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
 
                                 Components\FileUpload::make('ward_residence_proof')
                                     ->label('Ward Residence Proof')
                                     ->reactive()
-                                    ->visible(fn(Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
+                                    ->visible(fn (Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
 
                                 Components\FileUpload::make('hospital_birth_report')
                                     ->label('Hospital Birth Report')
                                     ->reactive()
-                                    ->hidden(fn(Forms\Get $get) => ! in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
+                                    ->hidden(fn (Forms\Get $get) => ! in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
 
                                 Components\FileUpload::make('last_vaccine_proof')
                                     ->label('Last Vaccine Proof')
                                     ->reactive()
-                                    ->hidden(fn(Forms\Get $get) => in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
+                                    ->hidden(fn (Forms\Get $get) => in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
 
                                 Components\FileUpload::make('indian_citizen_proof')
                                     ->label('Indian Citizen Proof (In the case of Indian Citizen)'),
@@ -585,7 +647,7 @@ class BirthCertificateFormResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('serviceRequests.related_request_type')
-                    ->formatStateUsing(fn($state) => [
+                    ->formatStateUsing(fn ($state) => [
                         BirthCertificateForm::class => 'Birth Certificate Form',
                         // Add other models here
                     ][$state] ?? $state)
@@ -620,7 +682,7 @@ class BirthCertificateFormResource extends Resource
 
                 Action::make('mark_verified')
                     ->label('Verify')
-                    ->visible(fn(Model $record) => $record->serviceRequests->last()?->status === 'pending')
+                    ->visible(fn (Model $record) => $record->serviceRequests->last()?->status === 'pending')
                     ->action(function (Model $record, array $data) {
                         $serviceRequest = $record->serviceRequests->last();
 
@@ -674,13 +736,13 @@ class BirthCertificateFormResource extends Resource
 
                 Action::make('approve')
                     ->label('Approve')
-                    ->visible(fn(Model $record) => $record->serviceRequests->last()?->status === 'verified')
+                    ->visible(fn (Model $record) => $record->serviceRequests->last()?->status === 'verified')
                     ->action(function (Model $record) {
                         $serviceRequest = $record->serviceRequests->last();
                         if ($serviceRequest) {
                             $serviceRequest->update([
                                 'status' => 'approved',
-                                'completion_date' => now()
+                                'completion_date' => now(),
                             ]);
                         }
                     })
@@ -690,7 +752,7 @@ class BirthCertificateFormResource extends Resource
 
                 Action::make('reject')
                     ->label('Reject')
-                    ->visible(fn(Model $record) => $record->serviceRequests->last()?->status !== 'approved' && $record->serviceRequests->last()?->status !== 'rejected')
+                    ->visible(fn (Model $record) => $record->serviceRequests->last()?->status !== 'approved' && $record->serviceRequests->last()?->status !== 'rejected')
                     ->action(function (Model $record, array $data) {
                         $serviceRequest = $record->serviceRequests->last();
 
@@ -700,7 +762,7 @@ class BirthCertificateFormResource extends Resource
                             $serviceRequest->update([
                                 'status' => 'rejected',
                                 'reject_message' => $data['reject_message'],
-                                'completion_date' => now()
+                                'completion_date' => now(),
                             ]);
                         }
                     })
@@ -714,12 +776,11 @@ class BirthCertificateFormResource extends Resource
                     ->requiresConfirmation(),
 
                 Action::make('Download Certificate')
-                    ->visible(fn(Model $record) => $record->serviceRequests->last()?->status === 'approved')
-                    ->url(fn($record) => route('birth-certificate.pdf', $record->id))
+                    ->visible(fn (Model $record) => $record->serviceRequests->last()?->status === 'approved')
+                    ->url(fn ($record) => route('birth-certificate.pdf', $record->id))
                     ->openUrlInNewTab()
                     ->label('Download Certificate')
                     ->icon('heroicon-o-arrow-down-tray'),
-
 
                 Tables\Actions\ViewAction::make(),
                 // Tables\Actions\EditAction::make(),

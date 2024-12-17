@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birth Certificate</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            padding: 20px;
+        }
+
+        .header,
+        .footer {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table td {
+            padding: 5px;
+            border: 1px solid #000;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h2>Birth Certificate</h2>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <table>
+                <tr>
+                    <td><strong>Name (Nepali):</strong> {{ $certificate->n_first_name }}
+                        {{ $certificate->n_middle_name }} {{ $certificate->n_surname }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Name (English):</strong> {{ $certificate->e_first_name }}
+                        {{ $certificate->e_middle_name }} {{ $certificate->e_surname }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Birth Date:</strong> {{ $certificate->birth_date }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Gender:</strong> {{ ucfirst($certificate->gender) }}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Birth Place:</strong> {{ ucfirst($certificate->birth_place) }}<br>
+                        <strong>Province:</strong> {{ $certificate->birth_province }}<br>
+                        <strong>Municipality:</strong> {{ $certificate->birth_municipality }}<br>
+                        <strong>Ward:</strong> {{ $certificate->birth_ward }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Father's Name (Nepali):</strong> {{ $certificate->n_father_first_name }}
+                        {{ $certificate->n_father_middle_name }} {{ $certificate->n_father_last_name }}<br>
+                        <strong>Father's Citizenship No:</strong> {{ $certificate->father_citizenship_no }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Mother's Name (Nepali):</strong> {{ $certificate->n_mother_first_name }}
+                        {{ $certificate->n_mother_middle_name }} {{ $certificate->n_mother_last_name }}<br>
+                        <strong>Mother's Citizenship No:</strong> {{ $certificate->mother_citizenship_no }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Informer Name (Nepali):</strong> {{ $certificate->n_informer_first_name }}
+                        {{ $certificate->n_informer_middle_name }} {{ $certificate->n_informer_last_name }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Verified by: {{ $officer_name }}
+        </div>
+    </div>
+</body>
+
+</html>

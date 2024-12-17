@@ -21,15 +21,29 @@ return new class extends Migration
             $table->string('e_middle_name', 100)->nullable();
             $table->string('e_surname', 100);
             $table->date('birth_date');
-            $table->enum('gender', ['male', 'female', 'other']);
+            $table->string('gender', 100);
             $table->enum('birth_type', ['single', 'twins', 'tripletsOrMore']);
             $table->boolean('is_weight_taken')->nullable();
             $table->integer('birth_weight')->nullable(); // in grams.
             $table->enum('birth_attendant_type', ['doctor', 'nurse', 'localSudini', 'trainedSudini', 'familyMembers', 'others']); // doctor, nurse, anm
             $table->enum('birth_place', ['home', 'healthpost', 'hospital', 'other']);
-            $table->string('birth_province', 50)->nullable();
-            $table->string('birth_municipality', 100)->nullable();
-            $table->integer('birth_ward')->nullable();
+            $table->string('n_birth_province', 50)->nullable();
+            $table->string('n_birth_district', 50)->nullable();
+            $table->string('n_birth_municipality', 100)->nullable();
+            $table->integer('n_birth_ward')->nullable();
+            $table->string('e_birth_province', 50)->nullable();
+            $table->string('e_birth_district', 50)->nullable();
+            $table->string('e_birth_municipality', 100)->nullable();
+            $table->integer('e_birth_ward')->nullable();
+
+            $table->string('n_permanent_province', 50)->nullable();
+            $table->string('n_permanent_district', 50)->nullable();
+            $table->string('n_permanent_municipality', 100)->nullable();
+            $table->integer('n_permanent_ward')->nullable();
+            $table->string('e_permanent_province', 50)->nullable();
+            $table->string('e_permanent_district', 50)->nullable();
+            $table->string('e_permanent_municipality', 100)->nullable();
+            $table->integer('e_permanent_ward')->nullable();
 
             // If born in foreign
             $table->string('birth_country', 100)->nullable();
@@ -70,7 +84,7 @@ return new class extends Migration
             $table->string('father_street', 100)->nullable();
             $table->string('father_village', 100)->nullable();
             $table->integer('father_house_no')->nullable();
-            $table->string(column: 'father_citizenship_no', 50)->nullable();
+            $table->string('father_citizenship_no', 50)->nullable();
             $table->date('father_dob')->nullable();
             $table->string('father_education', 100)->nullable();
             $table->text('father_occupation')->nullable();
@@ -109,11 +123,11 @@ return new class extends Migration
             $table->string('e_informer_last_name', 100);
             $table->string('informer_relation_with_child', 50);
 
-            $table->string('citizenship_number', 50)->nullable();
+            $table->string('informer_citizenship_no', 50)->nullable();
             // If foreigner
-            $table->string('passport_number', 50)->nullable();
+            $table->string('informer_passport_number', 50)->nullable();
 
-            $table->string('issued_country', 100)->nullable();
+            $table->string('informer_issued_country', 100)->nullable();
 
             $table->date('form_filled_date')->default(now());
 

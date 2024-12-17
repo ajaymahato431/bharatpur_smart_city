@@ -11,9 +11,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Builder; // Import Eloquent Builder
-
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth; // Import Eloquent Builder
 
 class BirthCertificateFormResource extends Resource
 {
@@ -32,7 +31,7 @@ class BirthCertificateFormResource extends Resource
                             ->label('')
                             ->schema([
                                 Forms\Components\TextInput::make('user_id')
-                                    ->default(fn() => Auth::id())
+                                    ->default(fn () => Auth::id())
                                     ->required()
                                     ->numeric()
                                     ->readOnly(),
@@ -105,9 +104,9 @@ class BirthCertificateFormResource extends Resource
                                         Components\Select::make('gender')
                                             ->label('Gender')
                                             ->options([
-                                                'male' => 'Male',
-                                                'female' => 'Female',
-                                                'other' => 'Other',
+                                                'Male/पुरुष' => 'Male/पुरुष',
+                                                'Female/महिला' => 'Female/महिला',
+                                                'Other/अन्य' => 'Other/अन्य',
                                             ])
                                             ->required(),
                                     ]),
@@ -154,7 +153,7 @@ class BirthCertificateFormResource extends Resource
                                             ->numeric()
                                             ->nullable()
                                             ->required()
-                                            ->visible(fn($get) => $get('is_weight_taken')), // Show only if 'is_weight_taken' is true
+                                            ->visible(fn ($get) => $get('is_weight_taken')), // Show only if 'is_weight_taken' is true
                                     ]),
                             ]),
 
@@ -175,16 +174,36 @@ class BirthCertificateFormResource extends Resource
                                 Components\Grid::make(3)
                                     ->schema([
 
-                                        Components\TextInput::make('birth_province')
-                                            ->label('Province')
+                                        Components\TextInput::make('n_birth_province')
+                                            ->label('Province (Nepali)')
                                             ->maxLength(50)
                                             ->nullable(),
-                                        Components\TextInput::make('birth_municipality')
-                                            ->label('Municipality')
+                                        Components\TextInput::make('n_birth_district')
+                                            ->label('District (Nepali)')
+                                            ->maxLength(50)
+                                            ->nullable(),
+                                        Components\TextInput::make('n_birth_municipality')
+                                            ->label('Municipality (Nepali)')
                                             ->maxLength(100)
                                             ->nullable(),
-                                        Components\TextInput::make('birth_ward')
-                                            ->label('Ward Number')
+                                        Components\TextInput::make('n_birth_ward')
+                                            ->label('Ward Number (Nepali)')
+                                            ->numeric()
+                                            ->nullable(),
+                                        Components\TextInput::make('e_birth_province')
+                                            ->label('Province (English)')
+                                            ->maxLength(50)
+                                            ->nullable(),
+                                        Components\TextInput::make('e_birth_district')
+                                            ->label('District (English)')
+                                            ->maxLength(50)
+                                            ->nullable(),
+                                        Components\TextInput::make('e_birth_municipality')
+                                            ->label('Municipality (English)')
+                                            ->maxLength(100)
+                                            ->nullable(),
+                                        Components\TextInput::make('e_birth_ward')
+                                            ->label('Ward Number (English)')
                                             ->numeric()
                                             ->nullable(),
 
@@ -208,6 +227,48 @@ class BirthCertificateFormResource extends Resource
                                             ->label('Local Address')
                                             ->maxLength(255)
                                             ->nullable(),
+                                    ]),
+                            ]),
+
+                        Components\Section::make('Child Permanent Address')
+                            ->description('Enter the permananet address of child.')
+                            ->schema([
+                                Components\Grid::make(3)
+                                    ->schema([
+
+                                        Components\TextInput::make('n_permanent_province')
+                                            ->label('Province (Nepali)')
+                                            ->maxLength(50)
+                                            ->nullable(),
+                                        Components\TextInput::make('n_permanent_district')
+                                            ->label('District (Nepali)')
+                                            ->maxLength(50)
+                                            ->nullable(),
+                                        Components\TextInput::make('n_permanent_municipality')
+                                            ->label('Municipality (Nepali)')
+                                            ->maxLength(100)
+                                            ->nullable(),
+                                        Components\TextInput::make('n_permanent_ward')
+                                            ->label('Ward Number (Nepali)')
+                                            ->numeric()
+                                            ->nullable(),
+                                        Components\TextInput::make('e_permanent_province')
+                                            ->label('Province (English)')
+                                            ->maxLength(50)
+                                            ->nullable(),
+                                        Components\TextInput::make('e_permanent_district')
+                                            ->label('District (English)')
+                                            ->maxLength(50)
+                                            ->nullable(),
+                                        Components\TextInput::make('e_permanent_municipality')
+                                            ->label('Municipality (English)')
+                                            ->maxLength(100)
+                                            ->nullable(),
+                                        Components\TextInput::make('e_permanent_ward')
+                                            ->label('Ward Number (English)')
+                                            ->numeric()
+                                            ->nullable(),
+
                                     ]),
                             ]),
 
@@ -492,15 +553,15 @@ class BirthCertificateFormResource extends Resource
                                             ->label('Relation with Child')
                                             ->required()
                                             ->maxLength(50),
-                                        Components\TextInput::make('citizenship_number')
+                                        Components\TextInput::make('informer_citizenship_no')
                                             ->label('Citizenship Number')
                                             ->maxLength(50)
                                             ->nullable(),
-                                        Components\TextInput::make('passport_number')
+                                        Components\TextInput::make('informer_passport_number')
                                             ->label('Passport Number (if foreigner)')
                                             ->maxLength(50)
                                             ->nullable(),
-                                        Components\TextInput::make('issued_country')
+                                        Components\TextInput::make('informer_issued_country')
                                             ->label('Passport Issued Country')
                                             ->maxLength(100)
                                             ->nullable(),
@@ -518,32 +579,32 @@ class BirthCertificateFormResource extends Resource
                                 Components\FileUpload::make('citizenship_front')
                                     ->label('Citizenship Front')
                                     ->reactive()
-                                    ->visible(fn(Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
+                                    ->visible(fn (Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
 
                                 Components\FileUpload::make('citizenship_back')
                                     ->label('Citizenship Back')
                                     ->reactive()
-                                    ->visible(fn(Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
+                                    ->visible(fn (Forms\Get $get) => ! ($get('../../mother_passport_no') || $get('../../father_passport_no'))),
 
                                 Components\FileUpload::make('passport_copy')
                                     ->label('Passport Copy')
                                     ->reactive()
-                                    ->visible(fn(Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
+                                    ->visible(fn (Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
 
                                 Components\FileUpload::make('ward_residence_proof')
                                     ->label('Ward Residence Proof')
                                     ->reactive()
-                                    ->visible(fn(Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
+                                    ->visible(fn (Forms\Get $get) => $get('../../mother_passport_no') || $get('../../father_passport_no')),
 
                                 Components\FileUpload::make('hospital_birth_report')
                                     ->label('Hospital Birth Report')
                                     ->reactive()
-                                    ->hidden(fn(Forms\Get $get) => ! in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
+                                    ->hidden(fn (Forms\Get $get) => ! in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
 
                                 Components\FileUpload::make('last_vaccine_proof')
                                     ->label('Last Vaccine Proof')
                                     ->reactive()
-                                    ->hidden(fn(Forms\Get $get) => in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
+                                    ->hidden(fn (Forms\Get $get) => in_array($get('../../birth_place'), ['healthpost', 'hospital'])),
 
                                 Components\FileUpload::make('indian_citizen_proof')
                                     ->label('Indian Citizen Proof (In the case of Indian Citizen)'),
@@ -577,7 +638,7 @@ class BirthCertificateFormResource extends Resource
                     ->label('Child Surname')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('serviceRequests.related_request_type')
-                    ->formatStateUsing(fn($state) => [
+                    ->formatStateUsing(fn ($state) => [
                         BirthCertificateForm::class => 'Birth Certificate Form',
                         // Add other models here
                     ][$state] ?? $state)

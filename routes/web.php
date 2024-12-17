@@ -5,6 +5,7 @@ use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\TranslationController;
 use App\Http\Controllers\UserController;
+use App\Models\BirthCertificateForm;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -12,13 +13,16 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/demo', function () {
-    return view('demo');
+    $certificate = BirthCertificateForm::findOrFail(1);
+
+    return view('pdf.birth_certificate', [
+        'certificate' => $certificate,
+    ]);
 });
 
 // Route::post('/translate', [TranslationController::class, 'translate'])->name('translate');
 // Route::get('/login', [PageController::class, 'login'])->name('login');
 // Route::get('/form/birth-certificate-form', [PageController::class, 'birthCertificateForm'])->name('birthCertificateForm');
-
 
 Route::get('/', [HomepageController::class, 'home'])->name('home');
 Route::get('/register', [PageController::class, 'register'])->name('register');
